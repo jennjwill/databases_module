@@ -33,9 +33,13 @@ Data is stored in databases in a binary file format (not readable by humans), al
 A: 
 Table: a whole set of rows, columns, and data orgazined into a readable line format.
 
-Row: the horizontal rows w/a label and cells holding visually organized data in a table
+Row: the horizontal rows w/a label and cells holding visually organized data in a table. 
 
-Column: the vertical columns w/labels and cells holding visually organized data in a table
+More conceptually, rows hold all kinds of data that belongs to an identifier.
+
+Column: the vertical columns w/labels and cells holding visually organized data in a table.
+
+More conceptually, columns hold data of similar type/define what the data represents.
 
 
 6. List three data types that can be used in a table.
@@ -74,7 +78,7 @@ A: strings, numbers, objects
      returns:
        Date       Payee       Amount      Memo
      5/15/2016   Mega Foods   124.93    Groceries   
-     
+
 
 8. Given this users table, write SQL queries using the following criteria and include the output:
 
