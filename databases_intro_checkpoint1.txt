@@ -1,0 +1,114 @@
+1. What data types do each of these values represent?
+
+A: I'm answering for primitive data types, but the database might give attributes like "name" or "date."
+
+  1. "A Clockwork Orange" -- string
+  2. 42 - integer
+  3. 09/02/1945 -- integer (date)
+  4. 98.7 -- float 
+  5. $15.99 -- integer (price)
+
+
+2. Explain when a database would be used. Explain when a text file would be used.
+
+A: A database would be used when you need to easily search for specific data, when you need that data to persist beyond the end of a program, and when data needs to be manipulated/accessed by different sources at once. It's always there, in storage.
+
+A text file would be used to hold text that a program can access (but without the above needs).
+
+
+3. Describe one difference between SQL and other programming languages.
+
+A: SQL is declarative, meaning we tell the databse what we're looking for rather than giving an algorithm for how to find what we're looking for.
+
+
+4. In your own words, explain how the pieces of a database system fit together at a high level.
+
+A: A database is set up as an application that allows users to manage data though an interface (GUI or command line). The app might be on a server, with another machine as the user getting data.
+
+Data is stored in databases in a binary file format (not readable by humans), allowing for speedy reading & manipulation (by the dbase system).
+
+
+5. Explain the meaning of table, row, column, and value.
+
+A: 
+Table: a whole set of rows, columns, and data orgazined into a readable line format.
+
+Row: the horizontal rows w/a label and cells holding visually organized data in a table
+
+Column: the vertical columns w/labels and cells holding visually organized data in a table
+
+
+6. List three data types that can be used in a table.
+
+A: strings, numbers, objects
+
+
+
+7. Given this payments table, provide an English description of the following queries and include their results:
+
+     SELECT date, amount  //return date, amount
+     FROM payments;       //from payments table
+
+     returns: 
+     Date         Amount
+    5/1/2016      1500.00
+    5/10/2016       37.00
+    5/15/2016      124.93
+    5/23/2016       54.72
+
+
+     SELECT amount          //return amount
+     FROM payments          //from payments table
+     WHERE amount > 500;    //only the cells where amount > 500
+
+     returns:
+     Amount
+     1500.00
+
+
+
+     SELECT *                      // "*" selects/returns all of the columns/rows that match the where clause 
+     FROM payments                 //from payments table
+     WHERE payee = 'Mega Foods'    //only cells with payee of Mega Foods
+
+     returns:
+       Date       Payee       Amount      Memo
+     5/15/2016   Mega Foods   124.93    Groceries   
+     
+
+8. Given this users table, write SQL queries using the following criteria and include the output:
+
+The email and sign-up date for the user named DeAndre Data.
+
+SELECT email, sign-up
+FROM users
+WHERE name = "DeAndre Data";
+
+output:
+
+   email          signup
+datad@comcast   2008-01-20
+
+
+The user ID for the user with email 'aleesia.algorithm@uw.edu'.
+
+SELECT userid
+FROM users
+WHERE email = "aleesia.algorithm@uw.edu";
+
+output:
+
+ userid
+    1
+
+
+All the columns for the user ID equal to 4.
+
+SELECT *
+FROM users
+WHERE userid = 4;
+
+output:
+
+userid       name            email                  signup
+4         Brandy Boolean   bboolean@nasa.gov       1999-10-15
