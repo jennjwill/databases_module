@@ -49,6 +49,8 @@ varchar - variable-length string: "USA" "JAPAN"
 date - 1999/06/12
 timestamp w time zone - 02:30 MST
 
+
+
 4. Decide how to create a new table to hold a list of people invited to a wedding dinner. The table needs to have first and last names, whether they sent in their RSVP, the number of guests they are bringing, and the number of meals (1 for adults and 1/2 for children).
 
 *Which data type would you use to store each of the following pieces of information?
@@ -92,15 +94,16 @@ ALTER TABLE WeddingDinner ADD COLUMN TableNumber tinyint;
 ALTER TABLE WeddingDinner DROP COLUMN TableNumber;
 
 
+
 5. Write a command to create a new table to hold the books in a library with the columns ISBN, title, author, genre, publishing date, number of copies, and available copies.
 
 A:
 
 CREATE TABLE library (
-  ISBN integer,
-  title text,
-  author text,
-  genre text,
+  ISBN char,
+  title varchar,
+  author varchar,
+  genre varchar,
   publishing_date date,
   available_copies integer
 );
@@ -110,31 +113,81 @@ CREATE TABLE library (
 
 INSERT INTO library (ISBN, title, author, genre, publishing_date, available_copies)
 VALUES
-(978-0-356-50819-1, 'The Fifth Season', 'N.K. Jemisin', 'science fantasy', 2015/08/04, 5),
-(978-0-356-50836-8, 'The Obelisk Gate', 'N.K. Jemisin', 'science fantasy', 2016/08/16, 5),
-(978-0-316-22924-1, 'The Stone Sky', 'N.K. Jemisin', 'science fantasy', 2017/08/15, 5);
+('978-0-356-50819-1', 'The Fifth Season', 'N.K. Jemisin', 'science fantasy', 2015/08/04, 5),
+('978-0-356-50836-8', 'The Obelisk Gate', 'N.K. Jemisin', 'science fantasy', 2016/08/16, 5),
+('978-0-316-22924-1', 'The Stone Sky', 'N.K. Jemisin', 'science fantasy', 2017/08/15, 5);
 
 
 *Someone has just checked out one of the books. Change the number of available copies to 1 fewer.
 
+UPDATE library SET available_copies=4 WHERE title='The Stone Sky';
+
 
 *Now one of the books has been added to the banned books list. Remove it from the table.
+
+DELETE FROM library WHERE title='The Obelisk Gate';
+
 
 
 6. Write a command to make a new table to hold spacecrafts. Information should include id, name, year launched, country of origin, a brief description of the mission, orbiting body, if it is currently operating, and its approximate miles from Earth. In addition to the table creation, provide commands that perform the following operations:
 
+A:
+
+CREATE TABLE spacecrafts (
+  id integer,
+  name varchar,
+  launched year,
+  country varchar,
+  missionInfo varchar,
+  orbitingBody varchar,
+  inOperation bool
+  distanceFromEarth integer
+)
+
 *Add three non-Earth-orbiting satellites to the table.
+
+INSERT INTO spacecrafts (id, name, launched, country, missionInfo, orbitingBody, inOperation, distanceFromEarth)
+VALUES
+(55555, 'Annares', 1995, 'USA', 'search for life forms', 'Mars', true, 33900000),
+(77777, 'Megan Rapinoe', 2020, 'USA', 'prime directive', 'Neptune', true, 4700000000),
+(898989, 'Third Fish', 2049, 'Nigeria', 'shuttle', 'Venus', true, 886000000);
+
 
 *Remove one of the satellites from the table since it has just crashed into the planet.
 
+DELETE FROM spacecrafts WHERE id=55555;
 
 *Edit another satellite because it is no longer operating and change the value to reflect that.
+
+UPDATE spacecrafts SET inOperation=false WHERE id=77777;
+
 
 
 7. Write a command to create a new table to hold the emails in your inbox. This table should include an id, the subject line, the sender, any additional recipients, the body of the email, the timestamp, whether or not you have read the email, and the id of the email chain it's in. Also provide commands that perform the following operations:
 
+CREATE TABLE emails (
+  id integer,
+  subject varchar,
+  sender varchar,
+  recipients varchar,
+  body text,
+  timestamp datetime,
+  read bool,
+  chainID integer
+)
+
 *Add three new emails to the inbox.
+
+INSERT INTO emails (id, subject, sender, recipients, body, timestamp, read, chainID)
+VALUES
+(4343, 'cat sitting', 'Mary Lou', 'me hubs@gmail.com)', 'Looking forward to watching GK next weekend!', 2019-06-02 10:10:22, true, 19),
+(4344, 'bday party', 'hubs@gmail.com', 'me kate@gmail.com boo@gmail.com', 'Roller skating rink is reserved and DJ booked.' 2019-06-04 18:27:34, true, 22),
+(222, 'claim your prize', 'applewinners1q78$@bs.com', 'me', 'Hello ma'am, this is an important notice to your account please call immediately with your bamk card number so you are not charged', 2018-09-09 23:01:43, false, 2);
 
 *You deleted one of the emails, so write a command to remove the row from the inbox table.
 
+DELETE FROM emails WHERE id=222;
+
 *You started reading an email but just heard a crash in another room. Mark the email as unread before investigating the crash, so you can come back and read it later.
+
+UPDATE emails SET read=false WHERE id=4343;
