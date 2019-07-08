@@ -48,7 +48,7 @@ WHERE breed NOT LIKE '%shepard%';
 SELECT id, age, weight, breed
 FROM dogs
 WHERE weight > 60
-OR breed = 'great dane';
+OR breed LIKE '%great dane%';
 
 
 4. Given this cats table, what records are returned from these queries?
