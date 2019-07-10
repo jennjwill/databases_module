@@ -53,7 +53,7 @@ Bruce Baker     null              null      null
 null            thai              120       herbal compress
 
 
-Honestly, I'm struggling with left and right join a bit. I get confused about what the left and right sides of the join clause are,even though I've read a bunch of articles w examples. I'm wondering if my answer is correct or flipped.
+Honestly, I'm struggling with left and right join a bit when I do it in my head. I get confused about what the left and right sides of the join clause are, even though I've read a bunch of articles w examples. I'm wondering if my answer is correct or flipped. I made this up rather than put code in postgres to see if I could get it without help.
 
 
 3. Define primary key and foreign key. Give a real-world example for each.
@@ -169,6 +169,7 @@ WHERE date < 2019-06-09;
 I don't know how to limit the date (DATE) data type so that WHERE line keeps giving me errors. Help?
 
 *Create a list of adopters who have not yet chosen a dog to adopt.
+** `adoption=#` etc. is the psql prompt that got copied/pasted over**
 
 adoption=# SELECT adopters.first_name, adopters.last_name, d.dog_id
 adoption-# FROM adopters
@@ -245,8 +246,7 @@ BlocLibrary-# WHERE books.title = 'Advanced Potion-Making';
 
 *List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
 
-nope but close
-needs all patrons listed
+So, I'm close. Where should I go from here? I have three examples of what I'm trying below. I've seen examples of using two sets of SELECT FROM WHERE, but not with join clauses like in my 3rd.
 
 BlocLibrary=# SELECT p.name, b.title, t.checked_in_date
 BlocLibrary-# FROM patrons AS p
@@ -260,3 +260,40 @@ in_date
  Terry Boot     | Advanced Potion-Making                  |
  Cedric Diggory | Fantastic Beasts and Where to Find Them |
 (2 rows)
+
+
+BlocLibrary=# SELECT p.name, b.title, t.checked_in_date
+BlocLibrary-# FROM patrons AS p
+BlocLibrary-# JOIN transactions AS t ON p.id = t.patron_id
+BlocLibrary-# JOIN books AS b ON t.isbn = b.isbn
+BlocLibrary-# ;
+       name       |                  title                  | checke
+d_in_date
+------------------+-----------------------------------------+-------
+----------
+ Hermione Granger | Hogwarts: A History                     | 2013-0
+7-09
+ Cho Chang        | Advanced Potion-Making                  | 2013-0
+7-09
+ Terry Boot       | Fantastic Beasts and Where to Find Them | 2013-0
+7-09
+ Padma Patil      | Fantastic Beasts and Where to Find Them | 2019-0
+7-05
+ Terry Boot       | Advanced Potion-Making                  |
+ Hermione Granger | Fantastic Beasts and Where to Find Them | 2019-0
+7-08
+ Cedric Diggory   | Fantastic Beasts and Where to Find Them |
+(7 rows)
+
+BlocLibrary=# SELECT p.name, b.title
+BlocLibrary-# FROM patrons AS p
+BlocLibrary-# JOIN transactions AS t ON p.id = t.patron_id
+BlocLibrary-# JOIN books AS b ON t.isbn = b.isbn
+BlocLibrary-# WHERE b.title=SOME(
+BlocLibrary(# SELECT isbn FROM transactions
+BlocLibrary(# WHERE t.checked_in_date IS NULL);
+ name | title
+------+-------
+(0 rows)
+
+
