@@ -5,6 +5,56 @@ A: JOIN
 
 2. Explain, in your own words, the difference between an INNER JOIN, LEFT OUTER JOIN, and RIGHT OUTER JOIN. Give a real-world example for each.
 
+A:
+
+INNER JOIN results in a table that includes all the columns from both tables and only the matching rows from both tables.
+
+LEFT OUTER JOIN is INNER JOIN plus unmatched rows from the left side of table; LEFT table is preserved.
+
+RIGHT OUTER JOIN is INNER JOIN plus unmatched rows from the right side of table; RIGHT table is preserved.
+
+example:
+
+clients
+id      name                package
+---------------------------------------
+1     Bev Holly             therapeutic
+2     Stan Lee              sports
+3     Carrie Marin          spa
+4     Bruce Baker           null
+
+treatments
+id      package       price       supplies
+------------------------------------------------
+101   therapeutic     99            null
+102   spa             120           hot stones, scrub
+103   sports          99            tiger balm
+104   thai            120           herbal compress
+
+SELECT clients.name, clients.package, treatments.price, treatments.supplies 
+FROM clients 
+LEFT JOIN treatments ON clients.package = treatments.package;
+
+name            package         price      supplies
+---------------------------------------------------------------
+Bev Holly       therapeutic      99          null
+Stan Lee        sports           99         tiger balm
+Carrie Martin   spa              120      hot stones, scrub
+Bruce Baker     null             null         null
+
+RIGHT JOIN w same parameters:
+
+name            package          price     supplies
+---------------------------------------------------------------
+Bev Holly       therapeutic       99        null
+Stan Lee        sports            99        tiger balm
+Carrie Martin   spa               120       hot stones, scrub
+Bruce Baker     null              null      null
+null            thai              120       herbal compress
+
+
+Honestly, I'm struggling with left and right join a bit. I get confused about what the left and right sides of the join clause are,even though I've read a bunch of articles w examples. I'm wondering if my answer is correct or flipped.
+
 
 3. Define primary key and foreign key. Give a real-world example for each.
 
@@ -44,24 +94,169 @@ In my above fb example, if phone number appeared in both userID and contact_info
 7. Using this Employee schema and data, write queries to find the following information:
 List all employees and all shifts.
 
+SELECT employees.name, shifts.date, shifts.start_time, shifts.end_time
+FROM employees
+JOIN scheduled_shifts ON employees.id = scheduled_shifts.employee_id
+JOIN shifts ON shifts.id = scheduled_shifts.shift_id;
+
+
+  name       |    date    | start_time | end_time
+------------------+------------+------------+----------
+ Hermione Granger | 1998-03-09 | 08:00:00   | 16:00:00
+ Hermione Granger | 1998-03-10 | 08:00:00   | 16:00:00
+ Hermione Granger | 1998-03-11 | 08:00:00   | 16:00:00
+ Hermione Granger | 1998-03-12 | 08:00:00   | 16:00:00
+ Hermione Granger | 1998-03-13 | 08:00:00   | 16:00:00
+ Ronald Weasley   | 1998-03-10 | 12:00:00   | 16:00:00
+ Ronald Weasley   | 1998-03-12 | 12:00:00   | 16:00:00
+ Luna Lovegood    | 1998-03-09 | 12:00:00   | 16:00:00
+ Luna Lovegood    | 1998-03-11 | 12:00:00   | 16:00:00
+ Luna Lovegood    | 1998-03-13 | 12:00:00   | 16:00:00
+ Draco Malfoy     | 1998-03-11 | 16:00:00   | 20:00:00
+ Draco Malfoy     | 1998-03-12 | 16:00:00   | 20:00:00
+ Draco Malfoy     | 1998-03-13 | 16:00:00   | 20:00:00
+ Padma Patil      | 1998-03-09 | 12:00:00   | 20:00:00
+ Padma Patil      | 1998-03-10 | 12:00:00   | 20:00:00
+ Padma Patil      | 1998-03-11 | 12:00:00   | 20:00:00
+ Padma Patil      | 1998-03-09 | 08:00:00   | 12:00:00
+ Padma Patil      | 1998-03-10 | 08:00:00   | 12:00:00
+ Padma Patil      | 1998-03-11 | 08:00:00   | 12:00:00
+ Cho Chang        | 1998-03-12 | 12:00:00   | 20:00:00
+ Cho Chang        | 1998-03-13 | 12:00:00   | 20:00:00
+ Dean Thomas      | 1998-03-09 | 16:00:00   | 20:00:00
+ Dean Thomas      | 1998-03-10 | 16:00:00   | 20:00:00
+(23 rows)
+
+
+
 
 8. Using this Adoption schema and data, please write queries to retrieve the following information and include the results:
 *Create a list of all volunteers. If the volunteer is fostering a dog, include each dog as well.
 
+adoption=# SELECT v.first_name, v.last_name, dogs.name
+adoption-# FROM volunteers AS v
+adoption-# LEFT JOIN dogs
+adoption-# ON v.foster_dog_id = dogs.id;
+ first_name | last_name  |   name
+------------+------------+-----------
+ Rubeus     | Hagrid     | Munchkin
+ Marjorie   | Dursley    | Marmaduke
+ Sirius     | Black      |
+ Remus      | Lupin      |
+ Albus      | Dumbledore |
+(5 rows)
+
 
 *The cat's name, adopter's name, and adopted date for each cat adopted within the past month to be displayed as part of the "Happy Tail" social media promotion which posts recent successful adoptions.
 
+Without the date comparison operator, I get this:
+
+ name   | first_name | last_name |    date
+----------+------------+-----------+------------
+ Azul     | Hermione   | Granger   | 2019-05-25
+ Mushi    | Arabella   | Figg      | 2019-06-19
+ Victoire | Argus      | Filch     | 2019-06-24
+(3 rows)
+
+Using this query, minus the WHERE line at the end:
+
+SELECT cats.name, a.first_name, a.last_name, c.date
+FROM cats
+JOIN cat_adoptions AS c ON cats.id = c.cat_id
+JOIN adopters AS a ON a.id = c.adopter_id
+WHERE date < 2019-06-09; 
+
+I don't know how to limit the date (DATE) data type so that WHERE line keeps giving me errors. Help?
 
 *Create a list of adopters who have not yet chosen a dog to adopt.
+
+adoption=# SELECT adopters.first_name, adopters.last_name, d.dog_id
+adoption-# FROM adopters
+adoption-# LEFT JOIN dog_adoptions AS d ON d.adopter_id = adopters.i
+d;
+ first_name | last_name | dog_id
+------------+-----------+--------
+ Argus      | Filch     |  10007
+ Arabella   | Figg      |
+ Hermione   | Granger   |
+(3 rows)
+
+Names with no dog_id have not adopted a dog.
 
 
 *Lists of all cats and all dogs who have not been adopted.
 
+Names with no adopter_id have not been adopted:
+
+adoption=# SELECT cats.name, c.adopter_id
+adoption-# FROM cats
+adoption-# LEFT JOIN cat_adoptions AS c ON cats.id = c.cat_id;
+   name   | adopter_id
+----------+------------
+ Azul     |          1
+ Mushi    |          2
+ Victoire |          3
+ Seashell |
+ Nala     |
+(5 rows)
+
+adoption=# SELECT dogs.name, d.adopter_id
+adoption-# FROM dogs
+adoption-# LEFT JOIN dog_adoptions AS d ON dogs.id = d.dog_id;
+   name    | adopter_id
+-----------+------------
+ Rosco     |          3
+ Munchkin  |
+ Boujee    |
+ Lassie    |
+ Marley    |
+ Marmaduke |
+(6 rows)
+
+
 *The name of the person who adopted Rosco.
+
+adoption=# SELECT a.first_name, a.last_name, d.dog_id
+adoption-# FROM adopters
+adoption-# AS a
+adoption-# JOIN dog_adoptions AS d ON a.id = d.adopter_id;
+ first_name | last_name | dog_id
+------------+-----------+--------
+ Argus      | Filch     |  10007
+(1 row)
+
 
 
 9. Using this Library schema and data, write queries applying the following scenarios and include the results:
 *To determine if the library should buy more copies of a given book, please provide the names and position, in order, of all of the patrons with a hold (request for a book with all copies checked out) on "Advanced Potion-Making".
 
+BlocLibrary=# SELECT p.name, holds.rank
+BlocLibrary-# FROM patrons AS p
+BlocLibrary-# JOIN holds ON p.id = holds.patron_id
+BlocLibrary-# JOIN books ON holds.isbn = books.isbn
+BlocLibrary-# WHERE books.title = 'Advanced Potion-Making';
+      name      | rank
+----------------+------
+ Cedric Diggory |    2
+ Terry Boot     |    1
+(2 rows)
+
+
 
 *List all of the library patrons. If they have one or more books checked out, list the books with the patrons.
+
+nope but close
+needs all patrons listed
+
+BlocLibrary=# SELECT p.name, b.title, t.checked_in_date
+BlocLibrary-# FROM patrons AS p
+BlocLibrary-# JOIN transactions AS t ON p.id = t.patron_id
+BlocLibrary-# JOIN books AS b ON t.isbn = b.isbn
+BlocLibrary-# WHERE t.checked_in_date IS NULL;
+      name      |                  title                  | checked_
+in_date
+----------------+-----------------------------------------+---------
+--------
+ Terry Boot     | Advanced Potion-Making                  |
+ Cedric Diggory | Fantastic Beasts and Where to Find Them |
+(2 rows)
